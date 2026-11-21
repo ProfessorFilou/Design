@@ -6,148 +6,131 @@
   <title>Alle Systeme / Beszel</title>
   <style>
     :root {
-      --background: #ffffff;
-      --foreground: #09090b;
-      --card: #ffffff;
-      --card-foreground: #09090b;
-      --popover: #ffffff;
-      --popover-foreground: #09090b;
-      --primary: #18181b;
-      --primary-foreground: #fafafa;
-      --secondary: #f4f4f5;
-      --secondary-foreground: #18181b;
-      --muted: #f4f4f5;
-      --muted-foreground: #71717a;
-      --accent: #f4f4f5;
-      --accent-foreground: #18181b;
-      --destructive: #ef4444;
-      --border: #e4e4e7;
-      --input: #e4e4e7;
-      --ring: #18181b;
-      --radius: 0.5rem;
+      --bg: #fafafa; --surface: #ffffff; --muted-bg: #f4f4f5;
+      --border: #e4e4e7; --border-soft: #f4f4f5; --text: #09090b;
+      --muted: #71717a; --primary: #18181b; --primary-fg: #ffffff;
+      --green: #10b981; --amber: #eab308; --red: #ef4444; --blue: #3b82f6;
+      --ring: rgba(24, 24, 27, 0.12);
     }
-
     html.dark {
-      --background: #0a0a0a;
-      --foreground: #fafafa;
-      --card: #121212;
-      --card-foreground: #fafafa;
-      --popover: #171717;
-      --popover-foreground: #fafafa;
-      --primary: #fafafa;
-      --primary-foreground: #171717;
-      --secondary: #262626;
-      --secondary-foreground: #fafafa;
-      --muted: #262626;
-      --muted-foreground: #a3a3a3;
-      --accent: #262626;
-      --accent-foreground: #fafafa;
-      --destructive: #dc2626;
-      --border: #262626;
-      --input: #262626;
-      --ring: #d4d4d4;
+      --bg: #09090b; --surface: #121215; --muted-bg: #27272a;
+      --border: #27272a; --border-soft: #1f1f23; --text: #fafafa;
+      --muted: #a1a1aa; --primary: #fafafa; --primary-fg: #09090b;
+      --ring: rgba(250, 250, 250, 0.16);
     }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; border-color: var(--border); }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
-      background-color: var(--background);
-      color: var(--foreground);
-      font-size: 14px;
-      line-height: 1.5;
+      background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.45;
+      transition: background-color 0.16s ease, color 0.16s ease;
       -webkit-font-smoothing: antialiased;
-      transition: background-color 0.15s ease, color 0.15s ease;
     }
     svg.lucide {
       width: 16px; height: 16px; stroke: currentColor; stroke-width: 1.75;
       stroke-linecap: round; stroke-linejoin: round; fill: none; flex-shrink: 0;
     }
-    .container { max-width: 1600px; margin: 0 auto; padding: 14px 24px 48px; }
-    .navbar {
-      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes popIn { from { opacity: 0; transform: translateY(-4px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes modalIn { from { opacity: 0; transform: translate(-50%, -48%) scale(0.96); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+    @keyframes slideRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+    .anim-up { animation: fadeUp 0.16s cubic-bezier(0.16, 1, 0.3, 1); }
+    .wrap { max-width: 1600px; margin: 0 auto; padding: 14px 20px 48px; }
+    .topbar {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
       height: 54px; padding: 0 16px; display: flex; align-items: center;
       justify-content: space-between; gap: 12px; margin-bottom: 16px;
     }
-    .nav-group { display: flex; align-items: center; gap: 6px; position: relative; }
-    .logo-wrap { display: inline-flex; align-items: center; cursor: pointer; margin-right: 12px; color: var(--foreground); }
-    .search-trigger {
+    .nav-group { display: flex; align-items: center; gap: 5px; position: relative; }
+    .logo-wrap { display: inline-flex; align-items: center; cursor: pointer; margin-right: 12px; color: var(--text); }
+    .search-btn {
       display: inline-flex; align-items: center; justify-content: space-between;
-      height: 36px; width: 150px; padding: 0 12px; border: 1px solid var(--input);
-      border-radius: var(--radius); background: var(--background); color: var(--muted-foreground);
-      font-size: 13px; cursor: pointer;
+      height: 34px; width: 150px; padding: 0 10px; border: 1px solid var(--border);
+      border-radius: 8px; background: var(--surface); color: var(--muted); font-size: 13px; cursor: pointer;
     }
-    .search-trigger:hover { background: var(--accent); color: var(--accent-foreground); }
-    .kbd {
-      font-size: 11px; font-weight: 500; background: var(--muted);
-      border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px;
-    }
+    .search-btn:hover { background: var(--muted-bg); color: var(--text); }
+    .kbd { font-size: 11px; background: var(--muted-bg); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; }
     .btn-icon {
-      width: 36px; height: 36px; border: none; background: transparent;
-      border-radius: var(--radius); display: grid; place-items: center;
-      color: var(--foreground); cursor: pointer; transition: background-color 0.15s;
+      width: 34px; height: 34px; border: none; background: transparent; border-radius: 8px;
+      display: grid; place-items: center; color: var(--text); cursor: pointer;
     }
-    .btn-icon:hover, .btn-icon.active { background: var(--accent); }
+    .btn-icon:hover, .btn-icon.active { background: var(--muted-bg); }
     .btn-outline {
-      height: 36px; padding: 0 12px; border: 1px solid var(--input); background: var(--background);
-      border-radius: var(--radius); font-size: 13px; font-weight: 500; color: var(--foreground);
+      height: 34px; padding: 0 12px; border: 1px solid var(--border); background: var(--surface);
+      border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--text);
       display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
     }
-    .btn-outline:hover { background: var(--accent); }
+    .btn-outline:hover { background: var(--muted-bg); }
     .btn-primary {
-      height: 36px; padding: 0 14px; border: none; background: var(--primary);
-      color: var(--primary-foreground); border-radius: var(--radius); font-size: 13px;
-      font-weight: 500; display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+      height: 36px; padding: 0 14px; border: none; background: var(--primary); color: var(--primary-fg);
+      border-radius: 8px; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
     }
-    .btn-primary:hover { opacity: 0.9; }
-    .card-panel {
-      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
-      padding: 24px; margin-bottom: 16px;
-    }
-    .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
-    .card-title { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
-    .card-desc { font-size: 13.5px; color: var(--muted-foreground); margin-top: 2px; }
-    .input {
-      height: 36px; padding: 0 12px; border: 1px solid var(--input); border-radius: var(--radius);
-      background: var(--background); color: var(--foreground); font-size: 13.5px; outline: none;
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 22px 24px; margin-bottom: 16px; }
+    .panel-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+    .panel-title { font-size: 20px; font-weight: 600; letter-spacing: -0.015em; }
+    .panel-sub { font-size: 13.5px; color: var(--muted); margin-top: 2px; }
+    .input, .select {
+      height: 36px; padding: 0 12px; border: 1px solid var(--border); border-radius: 8px;
+      background: var(--surface); color: var(--text); font-size: 13.5px; outline: none;
     }
     .sys-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 315px)); gap: 16px; }
-    .sys-card {
-      border: 1px solid var(--border); border-radius: 12px; background: var(--card);
-      padding: 16px; cursor: pointer; transition: border-color 0.15s;
-    }
-    .sys-card:hover { border-color: var(--muted-foreground); }
-    .sys-top { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid var(--border); margin-bottom: 12px; font-weight: 600; }
+    .sys-card { border: 1px solid var(--border); border-radius: 12px; background: var(--surface); padding: 16px; cursor: pointer; }
+    .sys-card:hover { border-color: #a1a1aa; }
+    .sys-top { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid var(--border-soft); margin-bottom: 12px; font-weight: 600; }
     .m-row { display: grid; grid-template-columns: 124px 62px 1fr; align-items: center; gap: 6px; font-size: 13px; margin-bottom: 8px; }
-    .m-lbl { display: flex; align-items: center; gap: 8px; color: var(--muted-foreground); }
+    .m-lbl { display: flex; align-items: center; gap: 8px; color: var(--muted); }
+    .m-lbl svg.lucide { width: 15px; height: 15px; }
     .m-span { grid-column: span 2; display: flex; align-items: center; gap: 6px; }
-    .bar { height: 10px; background: var(--muted); border-radius: 4px; overflow: hidden; }
+    .bar { height: 10px; background: var(--muted-bg); border-radius: 4px; overflow: hidden; }
     .bar-fill { height: 100%; border-radius: 4px; }
     .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
-    .dot-green { background: #10b981; } .dot-amber { background: #eab308; } .dot-gray { background: #71717a; }
+    .dot-green { background: #10b981; } .dot-amber { background: #eab308; } .dot-red { background: #ef4444; } .dot-gray { background: #71717a; }
+    .chart-box { position: relative; height: 145px; width: 100%; margin-top: 8px; }
+    .chart-box svg { width: 100%; height: 100%; overflow: visible; }
+    .grid-ln { stroke: var(--border); stroke-dasharray: 2 2; stroke-width: 1; }
+    .ax-txt { fill: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
     table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
-    th { padding: 10px 12px; color: var(--muted-foreground); font-weight: 500; border-bottom: 1px solid var(--border); }
-    td { padding: 11px 12px; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; }
-    tbody tr:hover td { background: var(--muted); }
+    th { padding: 10px 12px; color: var(--muted); font-weight: 500; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    td { padding: 11px 12px; border-bottom: 1px solid var(--border-soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    tbody tr:hover td { background: var(--muted-bg); }
     .pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 999px; border: 1px solid var(--border); font-size: 12px; font-weight: 500; }
-    .popover { position: absolute; background: var(--popover); color: var(--popover-foreground); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.12); padding: 4px; z-index: 40; }
+    .popover { position: absolute; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 10px 28px rgba(0,0,0,0.12); padding: 4px; z-index: 45; animation: popIn 0.14s ease; }
     .dd-item { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 6px; font-size: 13px; cursor: pointer; white-space: nowrap; }
-    .dd-item:hover { background: var(--accent); }
-    .settings-wrap { display: grid; grid-template-columns: 220px 1fr; gap: 32px; border-top: 1px solid var(--border); padding-top: 20px; }
+    .dd-item:hover { background: var(--muted-bg); }
+    .dd-sep { height: 1px; background: var(--border-soft); margin: 4px 0; }
+    .view-menu { top: 42px; right: 0; display: grid; grid-template-columns: repeat(4, 150px); padding: 8px; gap: 4px; }
+    @media (max-width: 720px) { .view-menu { grid-template-columns: repeat(2, 145px); } }
+    .vm-col { border-right: 1px solid var(--border-soft); padding-right: 4px; }
+    .vm-col:last-child { border-right: none; }
+    .vm-head { font-size: 12px; font-weight: 600; color: var(--muted); padding: 6px 10px; }
+    .switch { position: relative; display: inline-block; width: 38px; height: 22px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; inset: 0; background: var(--muted-bg); border-radius: 999px; transition: 0.2s; border: 1px solid var(--border); }
+    .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background: var(--surface); border-radius: 50%; transition: 0.2s; }
+    input:checked + .slider { background: var(--primary); border-color: var(--primary); }
+    input:checked + .slider:before { transform: translateX(16px); background: var(--primary-fg); }
+    .settings-wrap { display: grid; grid-template-columns: 220px 1fr; gap: 32px; border-top: 1px solid var(--border-soft); padding-top: 20px; }
     @media (max-width: 780px) { .settings-wrap { grid-template-columns: 1fr; } }
-    .side-btn { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 12px; border-radius: var(--radius); font-size: 13.5px; color: var(--foreground); border: none; background: transparent; text-align: left; cursor: pointer; margin-bottom: 3px; }
-    .side-btn:hover, .side-btn.active { background: var(--muted); font-weight: 600; }
-    .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; }
-    .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: min(500px, 94vw); background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 22px; z-index: 60; }
-    .drawer { position: fixed; top: 8px; right: 8px; bottom: 8px; width: min(520px, 94vw); background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; overflow-y: auto; z-index: 60; }
-    .toast { position: fixed; bottom: 20px; right: 20px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; font-size: 13.5px; z-index: 80; }
+    .side-btn { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 12px; border-radius: 8px; font-size: 13.5px; color: var(--text); border: none; background: transparent; text-align: left; cursor: pointer; margin-bottom: 3px; }
+    .side-btn:hover, .side-btn.active { background: var(--muted-bg); font-weight: 600; }
+    .divider { height: 1px; background: var(--border-soft); margin: 18px 0; }
+    .tag-input { border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 8px; }
+    .chip { background: var(--primary); color: var(--primary-fg); font-size: 12px; padding: 3px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px; }
+    .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.45); backdrop-filter: blur(1.5px); z-index: 50; }
+    .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: min(510px, 94vw); background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px; z-index: 60; animation: modalIn 0.16s ease; }
+    .drawer { position: fixed; top: 8px; right: 8px; bottom: 8px; width: min(560px, 94vw); background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; overflow-y: auto; z-index: 60; animation: slideRight 0.2s ease; }
+    .seg-tabs { display: grid; grid-template-columns: 1fr 1fr; background: var(--muted-bg); padding: 3px; border-radius: 8px; margin: 12px 0; }
+    .seg-tab { border: none; background: transparent; padding: 6px; border-radius: 6px; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; }
+    .seg-tab.active { background: var(--surface); color: var(--text); }
+    .form-row { display: grid; grid-template-columns: 145px 1fr; align-items: center; gap: 12px; margin-bottom: 10px; font-size: 13.5px; }
+    .form-row label { text-align: right; font-weight: 500; }
+    .toast { position: fixed; bottom: 20px; right: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; font-size: 13.5px; z-index: 80; }
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="wrap">
     <header class="navbar">
       <div class="nav-group">
-        <!-- Echtes Beszel-Logo aus internal/site/src/components/logo.tsx -->
         <div class="logo-wrap" onclick="switchView('systems')" aria-label="Beszel">
           <svg style="height:18px;width:auto;fill:currentColor;" viewBox="0 0 2180 512">
             <path d="M98.487 500C61.812 500 32.083 470.271 32.083 433.597L32.083 78.404C32.083 41.729 61.812 12 98.487 12L211.797 12C273.329 12 318.081 26.866 346.053 56.597C362.589 74.165 370.857 98.587 370.857 129.863C370.857 148.209 366.663 166.774 358.273 185.56C350.097 204.345 335.469 218.29 314.388 227.394C338.053 236.938 355.908 252.578 367.953 274.316C379.998 296.054 386.021 321.561 386.021 350.836C386.021 382.548 378.492 410.025 363.435 433.268C353.972 448.037 341.817 460.751 326.972 471.41C310.405 483.159 291.042 490.923 268.884 494.7C246.725 498.256 226.393 500.011 207.887 499.967L98.487 500ZM145.654 205.512L218.041 205.512C236.759 205.512 251.925 201.318 263.538 192.931C275.367 184.544 281.281 169.658 281.281 148.273C281.281 124.668 273.324 109.23 257.41 101.959C243.647 95.802 226.443 92.724 205.798 92.724L145.654 92.724L145.654 205.512ZM145.654 416.847L220.665 416.847C237.017 416.847 249.711 414.431 258.744 409.599C274.873 400.817 282.937 382.927 282.937 355.928C282.937 332.919 275.088 317.141 259.389 308.594C250.571 303.762 238.199 301.346 222.273 301.346L145.654 301.346L145.654 416.847Z"/>
@@ -159,7 +142,7 @@
           </svg>
         </div>
 
-        <button class="search-trigger" onclick="openModal('cmdModal')">
+        <button class="search-btn" onclick="openModal('cmdModal')">
           <span style="display:flex;align-items:center;gap:7px;">
             <svg class="lucide" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
             Suche
@@ -174,6 +157,9 @@
         </button>
         <button class="btn-icon" id="nav-containers" title="Container" onclick="switchView('containers')">
           <svg class="lucide" viewBox="0 0 24 24"><line x1="22" x2="2" y1="12" y2="12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+        </button>
+        <button class="btn-icon" id="nav-smart" title="S.M.A.R.T." onclick="switchView('smart')">
+          <svg class="lucide" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
         </button>
         <button class="btn-icon" id="nav-monitors" title="Netzwerk-Monitore" onclick="switchView('monitors')">
           <svg class="lucide" viewBox="0 0 24 24"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg>
@@ -192,30 +178,56 @@
           System hinzufügen
         </button>
 
-        <div id="userPop" class="popover hidden" style="top:44px; right:148px; width:205px;">
-          <div style="padding:8px 10px; font-weight:600; border-bottom:1px solid var(--border); margin-bottom:4px;">finn@pihole.local</div>
+        <div id="userPop" class="popover hidden" style="top:44px; right:148px; width:215px;">
+          <div style="padding:8px 10px; font-weight:600; border-bottom:1px solid var(--border-soft); margin-bottom:4px;">finn@pihole.local</div>
           <div class="dd-item" onclick="showToast('Benutzer')">Benutzer</div>
           <div class="dd-item" onclick="switchView('systems')">Systeme</div>
           <div class="dd-item" onclick="showToast('Protokolle')">Protokolle</div>
           <div class="dd-item" onclick="showToast('Backups')">Backups</div>
+          <div class="dd-sep"></div>
           <div class="dd-item" onclick="showToast('Abgemeldet')">Abmelden</div>
         </div>
       </div>
     </header>
-    <section class="card-panel" id="view-systems">
-      <div class="card-header">
+    <section class="panel anim-up" id="view-systems">
+      <div class="panel-head">
         <div>
-          <h1 class="card-title">Alle Systeme</h1>
-          <p class="card-desc">Klicke auf ein System, um weitere Informationen zu sehen.</p>
+          <h1 class="panel-title">Alle Systeme</h1>
+          <p class="panel-sub">Klicke auf ein System, um weitere Informationen zu sehen.</p>
         </div>
         <div style="display:flex; gap:8px; position:relative;">
-          <input type="text" class="input" style="width:220px;" placeholder="Filter..." onkeyup="filterSystem(this.value)" />
-          <button class="btn-outline" onclick="togglePop('viewPop', event)">
+          <input type="text" class="input" style="width:230px;" placeholder="Filter..." onkeyup="filterSystem(this.value)" />
+          <button class="btn-outline" style="padding:0 10px;" onclick="togglePop('viewPop', event)">
             <svg class="lucide" viewBox="0 0 24 24"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/></svg>
           </button>
-          <div id="viewPop" class="popover hidden" style="top:42px; right:0; width:175px;">
-            <div class="dd-item" onclick="setLayout('grid')">Kachel-Ansicht</div>
-            <div class="dd-item" onclick="setLayout('table')">Tabellen-Ansicht</div>
+
+          <div id="viewPop" class="popover view-menu hidden" onclick="event.stopPropagation()">
+            <div class="vm-col">
+              <div class="vm-head">Anordnung</div>
+              <div class="dd-item" onclick="setLayout('table')">Tabelle</div>
+              <div class="dd-item" onclick="setLayout('grid')"><strong>&#10003; Kachel</strong></div>
+            </div>
+            <div class="vm-col">
+              <div class="vm-head">Status</div>
+              <div class="dd-item">&#10003; Alle Systeme</div>
+              <div class="dd-item">Aktiv (1)</div>
+              <div class="dd-item">Inaktiv (0)</div>
+              <div class="dd-item">Pausiert (0)</div>
+            </div>
+            <div class="vm-col">
+              <div class="vm-head">Sortieren nach</div>
+              <div class="dd-item">&#10003; System</div>
+              <div class="dd-item">CPU</div>
+              <div class="dd-item">Arbeitsspeicher</div>
+              <div class="dd-item">Temperatur</div>
+            </div>
+            <div class="vm-col">
+              <div class="vm-head">Sichtbare Spalten</div>
+              <div class="dd-item">&#10003; CPU</div>
+              <div class="dd-item">&#10003; Arbeitsspeicher</div>
+              <div class="dd-item">&#10003; Festplatte</div>
+              <div class="dd-item">&#10003; Temperatur</div>
+            </div>
           </div>
         </div>
       </div>
@@ -236,7 +248,8 @@
                 <div class="dd-item" onclick="showToast('System pausiert')">Pause</div>
                 <div class="dd-item" onclick="showToast('Name kopiert')">Name kopieren</div>
                 <div class="dd-item" onclick="showToast('Host kopiert')">Host kopieren</div>
-                <div class="dd-item" style="color:var(--destructive);" onclick="showToast('Löschen abgebrochen')">Löschen</div>
+                <div class="dd-sep"></div>
+                <div class="dd-item" style="color:var(--red);" onclick="showToast('Abgebrochen')">Löschen</div>
               </div>
             </div>
           </div>
@@ -244,9 +257,12 @@
           <div class="m-row"><span class="m-lbl"><svg class="lucide" viewBox="0 0 24 24"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/></svg> CPU:</span><span>0,99%</span><div class="bar"><div class="bar-fill" style="width:5%; background:#10b981;"></div></div></div>
           <div class="m-row"><span class="m-lbl"><svg class="lucide" viewBox="0 0 24 24"><path d="M2 15h20"/><path d="M2 7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2Z"/></svg> Arbeitsspeicher:</span><span>29,7%</span><div class="bar"><div class="bar-fill" style="width:29.7%; background:#10b981;"></div></div></div>
           <div class="m-row"><span class="m-lbl"><svg class="lucide" viewBox="0 0 24 24"><line x1="22" x2="2" y1="12" y2="12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg> Festplatte:</span><span>67,9%</span><div class="bar"><div class="bar-fill" style="width:67.9%; background:#eab308;"></div></div></div>
+          <div class="m-row"><span class="m-lbl"><svg class="lucide" viewBox="0 0 24 24"><rect width="16" height="16" x="4" y="4" rx="2"/><circle cx="12" cy="12" r="3"/></svg> GPU:</span><span></span><div></div></div>
           <div class="m-row"><span class="m-lbl"><svg class="lucide" viewBox="0 0 24 24"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M12 12 7 17.8V22h10v-4.2L12 12Z"/></svg> Systemlast:</span><span class="m-span"><span class="dot dot-green"></span> 0,01 0,03 0,03</span></div>
           <div class="m-row"><span class="m-lbl"><svg class="lucide" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4"/><path d="M3 12v-2a4 4 0 0 1 4-4h14"/></svg> Netzwerk:</span><span class="m-span">1,58 KB/s</span></div>
           <div class="m-row"><span class="m-lbl"><svg class="lucide" viewBox="0 0 24 24"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/></svg> Temperatur:</span><span class="m-span">50,15 &deg;C</span></div>
+          <div class="m-row"><span class="m-lbl"><svg class="lucide" viewBox="0 0 24 24"><rect width="10" height="16" x="7" y="6" rx="2"/><path d="M10 2h4"/></svg> Batt:</span><span></span><div></div></div>
+          <div class="m-row"><span class="m-lbl"><svg class="lucide" viewBox="0 0 24 24"><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.859a10 10 0 0 1 14 0"/></svg> Wi-Fi:</span><span></span><div></div></div>
           <div class="m-row"><span class="m-lbl"><svg class="lucide" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 12 2 2 4-4"/></svg> Dienste:</span><span class="m-span"><span class="dot dot-green"></span> 75 Dienste</span></div>
           <div class="m-row"><span class="m-lbl"><svg class="lucide" viewBox="0 0 24 24"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg> Updates:</span><span class="m-span"><span class="dot dot-amber"></span> 18 Updates</span></div>
           <div class="m-row"><span class="m-lbl"><svg class="lucide" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Betriebszeit:</span><span class="m-span">1 Stunde</span></div>
@@ -266,77 +282,139 @@
         </table>
       </div>
     </section>
-    <div id="view-detail" class="hidden">
-      <section class="card-panel">
+    <div id="view-detail" class="hidden anim-up">
+      <section class="panel">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
           <div>
-            <h1 class="card-title">Rasbarry Pi</h1>
-            <p class="card-desc"><span class="dot dot-green"></span> Aktiv &bull; 192.168.178.98 &bull; pihole &bull; Cortex-A72 &bull; 905.5 MB</p>
+            <h1 class="panel-title">Rasbarry Pi</h1>
+            <p class="panel-sub"><span class="dot dot-green"></span> Aktiv &bull; 192.168.178.98 &bull; pihole &bull; 1 Stunde &bull; Raspbian GNU/Linux 13 (trixie) &bull; Cortex-A72 &bull; 905.5 MB</p>
           </div>
           <div style="display:flex;gap:8px;">
             <button class="btn-outline" onclick="openDrawer('alertsDrawer')">Warnungen</button>
-            <button class="btn-outline" onclick="switchView('systems')">Zurück</button>
+            <button class="btn-outline" onclick="switchView('systems')">&larr; Zurück</button>
           </div>
+        </div>
+        <select class="select" style="width:100%;margin-top:14px;" onchange="showToast('Zeitraum: ' + this.value)">
+          <option>1 Minute</option><option selected>1 Stunde</option><option>12 Stunden</option><option>24 Stunden</option><option>1 Woche</option><option>30 Tage</option>
+        </select>
+      </section>
+
+      <section class="panel">
+        <h2 style="font-size:17px;">CPU-Auslastung</h2><p class="panel-sub">Durchschnittliche systemweite CPU-Auslastung</p>
+        <div class="chart-box">
+          <svg viewBox="0 0 600 120" preserveAspectRatio="none">
+            <line x1="30" y1="20" x2="600" y2="20" class="grid-ln" /><line x1="30" y1="100" x2="600" y2="100" class="grid-ln" />
+            <path d="M 30 100 L 380 96 L 395 25 L 415 97 L 600 98 L 600 100 Z" fill="rgba(59,130,246,0.18)" stroke="#3b82f6" stroke-width="1.8" />
+            <text x="0" y="24" class="ax-txt">20%</text><text x="0" y="104" class="ax-txt">0%</text>
+          </svg>
         </div>
       </section>
 
-      <section class="card-panel">
-        <h2 style="font-size:17px;margin-bottom:12px;">Systemd-Dienste</h2>
+      <section class="panel">
+        <h2 style="font-size:17px;">Arbeitsspeichernutzung</h2><p class="panel-sub">Genaue Nutzung zum aufgezeichneten Zeitpunkt</p>
+        <div class="chart-box">
+          <svg viewBox="0 0 600 120" preserveAspectRatio="none">
+            <line x1="35" y1="20" x2="600" y2="20" class="grid-ln" /><line x1="35" y1="100" x2="600" y2="100" class="grid-ln" />
+            <path d="M 35 100 L 35 72 L 600 70 L 600 100 Z" fill="rgba(16,185,129,0.2)" stroke="#10b981" stroke-width="1.8" />
+            <text x="0" y="24" class="ax-txt">906 MB</text><text x="0" y="104" class="ax-txt">0 B</text>
+          </svg>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 style="font-size:17px;">Temperatur</h2><p class="panel-sub">Temperaturen der Systemsensoren</p>
+        <div class="chart-box">
+          <svg viewBox="0 0 600 120" preserveAspectRatio="none">
+            <line x1="35" y1="20" x2="600" y2="20" class="grid-ln" /><line x1="35" y1="100" x2="600" y2="100" class="grid-ln" />
+            <path d="M 35 95 C 45 45, 52 24, 62 30 C 70 78, 80 96, 100 88 C 220 78, 420 75, 600 72" fill="none" stroke="#ef4444" stroke-width="1.8" />
+            <text x="0" y="24" class="ax-txt">65 &deg;C</text><text x="0" y="104" class="ax-txt">45 &deg;C</text>
+          </svg>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div><h2 style="font-size:17px;">Systemd-Dienste</h2><p class="panel-sub">Gesamt: 75 &nbsp;|&nbsp; Fehlgeschlagen: 0 &nbsp;|&nbsp; Alle 10 Minuten aktualisiert.</p></div>
+          <input class="input" style="width:220px;" placeholder="Filter..." onkeyup="filterTbl('svcTbl', this.value)" />
+        </div>
         <div style="overflow-x:auto;">
-          <table>
-            <thead><tr><th>Name</th><th>Status</th><th>Unterzustand</th><th>CPU (10m)</th><th>CPU-Spitze</th></tr></thead>
+          <table id="svcTbl">
+            <thead><tr><th>Name</th><th>Status</th><th>Unterzustand</th><th>CPU (10m)</th><th>CPU-Spitze</th><th>Arbeitsspeicher</th></tr></thead>
             <tbody>
-              <tr><td>beszel-agent</td><td><span class="pill"><span class="dot dot-green"></span> Active</span></td><td><span class="pill"><span class="dot dot-green"></span> Running</span></td><td>0,27%</td><td>0,27%</td></tr>
-              <tr><td>fan_control</td><td><span class="pill"><span class="dot dot-green"></span> Active</span></td><td><span class="pill"><span class="dot dot-green"></span> Running</span></td><td>0,67%</td><td>1,42%</td></tr>
-              <tr><td>cockpit</td><td><span class="pill"><span class="dot dot-gray"></span> Inactive</span></td><td><span class="pill"><span class="dot dot-amber"></span> Dead</span></td><td style="color:var(--muted-foreground);">N/A</td><td style="color:var(--muted-foreground);">N/A</td></tr>
+              <tr><td>avahi-daemon</td><td><span class="pill"><span class="dot dot-green"></span> Active</span></td><td><span class="pill"><span class="dot dot-green"></span> Running</span></td><td>0,02%</td><td>0,02%</td><td style="color:var(--muted);">N/A</td></tr>
+              <tr><td>beszel-agent</td><td><span class="pill"><span class="dot dot-green"></span> Active</span></td><td><span class="pill"><span class="dot dot-green"></span> Running</span></td><td>0,27%</td><td>0,27%</td><td style="color:var(--muted);">N/A</td></tr>
+              <tr><td>fan_control</td><td><span class="pill"><span class="dot dot-green"></span> Active</span></td><td><span class="pill"><span class="dot dot-green"></span> Running</span></td><td>0,67%</td><td>1,42%</td><td style="color:var(--muted);">N/A</td></tr>
             </tbody>
           </table>
         </div>
       </section>
-    </div>
-
-    <section class="card-panel hidden" id="view-containers">
-      <h1 class="card-title">Alle Container</h1>
-      <p class="card-desc" style="margin-top:12px;">Keine Ergebnisse.</p>
+    </div>    <section class="panel hidden anim-up" id="view-containers">
+      <h1 class="panel-title">Alle Container</h1><p class="panel-sub" style="margin-top:12px;">Keine Ergebnisse.</p>
     </section>
 
-    <section class="card-panel hidden" id="view-monitors">
-      <h1 class="card-title">Netzwerk-Monitore</h1>
-      <table style="margin-top:14px;">
-        <thead><tr><th>System</th><th>Ziel</th><th>Protokoll</th><th>Antwort</th><th>Verlust 1h</th></tr></thead>
+    <section class="panel hidden anim-up" id="view-smart">
+      <h1 class="panel-title">S.M.A.R.T.</h1><p class="panel-sub" style="margin-top:12px;">Keine Ergebnisse.</p>
+    </section>
+
+    <section class="panel hidden anim-up" id="view-monitors">
+      <div class="panel-head">
+        <div><h1 class="panel-title">Netzwerk-Monitore</h1><p class="panel-sub">Antwortzeitüberwachung durch Agenten.</p></div>
+        <button class="btn-outline" onclick="showToast('Monitor hinzufügen')">+ Monitor hinzufügen</button>
+      </div>
+      <table style="margin-top:10px;">
+        <thead><tr><th>System</th><th>Ziel</th><th>Protokoll</th><th>Intervall</th><th>Antwort</th><th>Verlust 1h</th></tr></thead>
         <tbody>
-          <tr><td>Rasbarry Pi</td><td><span class="dot dot-green"></span> 1.1.1.1</td><td>ICMP</td><td>11,2ms</td><td>0,00%</td></tr>
-          <tr><td>Rasbarry Pi</td><td><span class="dot dot-green"></span> 192.168.178.1</td><td>ICMP</td><td>788&micro;s</td><td>0,00%</td></tr>
+          <tr><td>Rasbarry Pi</td><td><span class="dot dot-green"></span> 1.1.1.1</td><td>ICMP</td><td>30s</td><td>11,2ms</td><td>0,00%</td></tr>
+          <tr><td>Rasbarry Pi</td><td><span class="dot dot-green"></span> 192.168.178.1</td><td>ICMP</td><td>30s</td><td>788&micro;s</td><td>0,00%</td></tr>
+          <tr><td>Rasbarry Pi</td><td><span class="dot dot-red"></span> google.com</td><td>DNS</td><td>30s</td><td>-</td><td>100%</td></tr>
         </tbody>
       </table>
     </section>
 
-    <section class="card-panel hidden" id="view-settings">
-      <div class="card-header"><div><h1 class="card-title">Einstellungen</h1><p class="card-desc">Anzeige- und Benachrichtigungseinstellungen verwalten.</p></div></div>
+    <section class="panel hidden anim-up" id="view-settings">
+      <div class="panel-head"><div><h1 class="panel-title">Einstellungen</h1><p class="panel-sub">Anzeige- und Benachrichtigungseinstellungen verwalten.</p></div></div>
       <div class="settings-wrap">
         <div>
           <button class="side-btn active" onclick="switchSetTab('general', this)">Allgemein</button>
+          <button class="side-btn" onclick="switchSetTab('notify', this)">Benachrichtigungen</button>
+          <button class="side-btn" onclick="switchSetTab('tokens', this)">Tokens &amp; Fingerabd...</button>
           <button class="side-btn" onclick="switchSetTab('history', this)">Warnungsverlauf</button>
+          <button class="side-btn" onclick="switchSetTab('heartbeat', this)">Heartbeat</button>
           <button class="side-btn" onclick="switchSetTab('yaml', this)">YAML-Konfiguration</button>
         </div>
         <div>
           <div id="set-general">
-            <h3>Allgemein</h3><p class="card-desc">Layoutbreite anpassen</p>
-            <input type="range" min="1000" max="1800" value="1600" oninput="document.querySelector('.container').style.maxWidth=this.value+'px'" style="width:100%;max-width:420px;margin:12px 0;" />
-            <div><button class="btn-primary" onclick="showToast('Einstellungen gespeichert')">Einstellungen speichern</button></div>
+            <h3>Allgemein</h3><p class="panel-sub">Layoutbreite (1600px) &amp; Warnschwellen</p><div class="divider"></div>
+            <input type="range" min="1000" max="1800" value="1600" oninput="document.querySelector('.wrap').style.maxWidth=this.value+'px'" style="width:100%;max-width:440px;" />
+            <div style="margin-top:18px;"><button class="btn-primary" onclick="showToast('Einstellungen gespeichert')">Einstellungen speichern</button></div>
+          </div>
+          <div id="set-notify" class="hidden">
+            <h3>E-Mail-Benachrichtigungen</h3>
+            <div class="tag-input"><span class="chip">finn@pihole.local &times;</span><input placeholder="E-Mail-Adresse eingeben..." style="border:none;outline:none;background:transparent;color:var(--text);flex:1;" /></div>
+            <div class="divider"></div>
+            <h3>Ruhezeiten</h3><p class="panel-sub">Täglich 21:50 - 10:00 (Inaktiv)</p>
+            <button class="btn-primary" style="margin-top:14px;" onclick="showToast('Benachrichtigungen gespeichert')">Einstellungen speichern</button>
+          </div>
+          <div id="set-tokens" class="hidden">
+            <h3>Tokens &amp; Fingerabdrücke</h3><p class="panel-sub">Universeller Token &amp; System-Fingerabdrücke</p><div class="divider"></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;"><strong>Universeller Token</strong><label class="switch"><input type="checkbox" /><span class="slider"></span></label></div>
           </div>
           <div id="set-history" class="hidden">
-            <h3>Warnungsverlauf</h3>
-            <table style="margin-top:12px;">
+            <h3>Warnungsverlauf</h3><p class="panel-sub">Sieh dir die neustens 200 Alarme an.</p><div class="divider"></div>
+            <table>
               <thead><tr><th>System</th><th>Name</th><th>Wert</th></tr></thead>
               <tbody>
+                <tr><td>Rasbarry Pi</td><td>Fehlgeschlagene Dienste</td><td>Ein oder mehrere Dienste befinden sich im Fehlerzustand</td></tr>
                 <tr><td>Rasbarry Pi</td><td>Temperatur</td><td>75&deg;C</td></tr>
                 <tr><td>Rasbarry Pi</td><td>CPU-Auslastung</td><td>90%</td></tr>
               </tbody>
             </table>
           </div>
+          <div id="set-heartbeat" class="hidden">
+            <h3>Heartbeat-Überwachung</h3><p class="panel-sub">HEARTBEAT_URL &bull; HEARTBEAT_INTERVAL (60s) &bull; HEARTBEAT_METHOD</p>
+          </div>
           <div id="set-yaml" class="hidden">
-            <h3>YAML-Konfiguration</h3><p class="card-desc" style="margin:8px 0 14px;">Exportiere die aktuelle config.yml.</p>
+            <h3>YAML-Konfiguration</h3><p class="panel-sub" style="margin:8px 0 14px;">Exportiere die aktuelle config.yml.</p>
             <button class="btn-primary" onclick="showToast('config.yml exportiert')">Konfiguration exportieren</button>
           </div>
         </div>
@@ -346,28 +424,45 @@
   <div id="backdrop" class="backdrop hidden" onclick="closeOverlays()"></div>
 
   <div id="alertsDrawer" class="drawer hidden">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-      <h2 style="font-size:18px;">Warnungen &ndash; Rasbarry Pi</h2>
-      <button class="btn-icon" onclick="closeOverlays()">
-        <svg class="lucide" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-      </button>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <div><h2 style="font-size:18px;">Warnungen</h2><p class="panel-sub">Rasbarry Pi</p></div>
+      <button class="btn-icon" onclick="closeOverlays()"><svg class="lucide" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
     </div>
-    <div class="card-panel" style="padding:14px;">
-      <strong>Temperatur-Schwelle: <span id="tmpVal">75&deg;C</span></strong>
-      <input type="range" min="40" max="100" value="75" oninput="document.getElementById('tmpVal').textContent=this.value+'°C'" style="width:100%;margin-top:8px;" />
+    <div class="panel" style="padding:14px 16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;"><strong>Status (Inaktiv für 2 Minuten)</strong><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
+    </div>
+    <div class="panel" style="padding:14px 16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><strong>CPU-Auslastung: <span id="cpuV">90%</span></strong><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
+      <input type="range" min="10" max="100" value="90" oninput="document.getElementById('cpuV').textContent=this.value+'%'" style="width:100%;" />
+    </div>
+    <div class="panel" style="padding:14px 16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><strong>Arbeitsspeichernutzung: <span id="ramV">85%</span></strong><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
+      <input type="range" min="10" max="100" value="85" oninput="document.getElementById('ramV').textContent=this.value+'%'" style="width:100%;" />
+    </div>
+    <div class="panel" style="padding:14px 16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><strong>Festplattennutzung: <span id="dskV">80%</span></strong><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
+      <input type="range" min="10" max="100" value="80" oninput="document.getElementById('dskV').textContent=this.value+'%'" style="width:100%;" />
+    </div>
+    <div class="panel" style="padding:14px 16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><strong>Temperatur: <span id="tmpV">75&deg;C</span></strong><label class="switch"><input type="checkbox" checked /><span class="slider"></span></label></div>
+      <input type="range" min="40" max="100" value="75" oninput="document.getElementById('tmpV').textContent=this.value+'°C'" style="width:100%;" />
     </div>
   </div>
 
   <div id="addSystemModal" class="modal hidden">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
       <strong style="font-size:17px;">System hinzufügen</strong>
-      <button class="btn-icon" onclick="closeOverlays()">
-        <svg class="lucide" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-      </button>
+      <button class="btn-icon" onclick="closeOverlays()"><svg class="lucide" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
     </div>
-    <input class="input" style="width:100%;margin-bottom:10px;" placeholder="Name (z. B. Rasbarry Pi)" />
-    <input class="input" style="width:100%;margin-bottom:14px;" placeholder="Host / IP (192.168.178.98)" />
-    <div style="display:flex;justify-content:space-between;">
+    <div class="seg-tabs">
+      <button class="seg-tab" onclick="setAgentTab(this)">Docker</button>
+      <button class="seg-tab active" onclick="setAgentTab(this)">Binär</button>
+    </div>
+    <div class="form-row"><label>Name</label><input class="input" style="width:100%;" placeholder="Rasbarry Pi" /></div>
+    <div class="form-row"><label>Host / IP</label><input class="input" style="width:100%;" placeholder="192.168.178.98" /></div>
+    <div class="form-row"><label>Port</label><input class="input" style="width:100%;" value="45876" /></div>
+    <div class="form-row"><label>Öffentlicher Schlüssel</label><input class="input" style="width:100%;" readonly value="ssh-ed25519 AAAAC3NzaC1lZDI1NTE5..." /></div>
+    <div style="display:flex;justify-content:space-between;margin-top:16px;">
       <button class="btn-outline" onclick="showToast('Linux-Befehl kopiert')">Linux-Befehl kopieren</button>
       <button class="btn-primary" onclick="closeOverlays(); showToast('System hinzugefügt')">System hinzufügen</button>
     </div>
@@ -375,15 +470,16 @@
 
   <div id="cmdModal" class="modal hidden" style="padding:0;top:32%;">
     <div style="display:flex;align-items:center;padding:0 12px;border-bottom:1px solid var(--border);">
-      <svg class="lucide" style="color:var(--muted-foreground);" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-      <input id="cmdIn" placeholder="Suchen..." onkeyup="filterCmd(this.value)" style="width:100%;padding:14px 10px;border:none;background:transparent;color:var(--foreground);outline:none;" />
-      <button class="btn-icon" style="width:28px;height:28px;" onclick="closeOverlays()">
-        <svg class="lucide" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-      </button>
+      <svg class="lucide" style="color:var(--muted);" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="cmdIn" placeholder="Nach Systemen oder Einstellungen suchen..." onkeyup="filterCmd(this.value)" style="width:100%;padding:14px 10px;border:none;background:transparent;color:var(--text);outline:none;" />
+      <button class="btn-icon" style="width:28px;height:28px;" onclick="closeOverlays()"><svg class="lucide" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
     </div>
     <div id="cmdList" style="padding:8px;">
-      <div class="dd-item" onclick="switchView('detail'); closeOverlays();">Rasbarry Pi</div>
+      <div class="dd-item" onclick="switchView('detail'); closeOverlays();">Rasbarry Pi &mdash; <span style="color:var(--muted);">192.168.178.98</span></div>
       <div class="dd-item" onclick="switchView('systems'); closeOverlays();">Alle Systeme</div>
+      <div class="dd-item" onclick="switchView('containers'); closeOverlays();">Alle Container</div>
+      <div class="dd-item" onclick="switchView('smart'); closeOverlays();">S.M.A.R.T.</div>
+      <div class="dd-item" onclick="switchView('monitors'); closeOverlays();">Netzwerk-Monitore</div>
       <div class="dd-item" onclick="switchView('settings'); closeOverlays();">Einstellungen</div>
     </div>
   </div>
@@ -392,73 +488,29 @@
 
   <script>
     function switchView(v) {
-      ['systems', 'detail', 'containers', 'monitors', 'settings'].forEach(id => {
-        document.getElementById('view-' + id).classList.toggle('hidden', id !== v);
-      });
-      ['systems', 'containers', 'monitors', 'settings'].forEach(nav => {
+      ['systems', 'detail', 'containers', 'smart', 'monitors', 'settings'].forEach(id => document.getElementById('view-' + id).classList.toggle('hidden', id !== v));
+      ['systems', 'containers', 'smart', 'monitors', 'settings'].forEach(nav => {
         const el = document.getElementById('nav-' + nav);
         if (el) el.classList.toggle('active', nav === v || (nav === 'systems' && v === 'detail'));
       });
       closePops();
     }
-    function setLayout(mode) {
-      document.getElementById('sysCardsView').classList.toggle('hidden', mode !== 'grid');
-      document.getElementById('sysTableView').classList.toggle('hidden', mode !== 'table');
-      closePops();
-    }
-    function switchSetTab(t, btn) {
-      document.querySelectorAll('.side-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      ['general', 'history', 'yaml'].forEach(id => document.getElementById('set-' + id).classList.toggle('hidden', id !== t));
-    }
-    function toggleTheme() {
-      document.documentElement.classList.toggle('dark');
-      showToast(document.documentElement.classList.contains('dark') ? 'Dark Mode' : 'Light Mode');
-    }
-    function togglePop(id, e) {
-      e.stopPropagation();
-      const target = document.getElementById(id);
-      const isHidden = target.classList.contains('hidden');
-      closePops();
-      if (isHidden) target.classList.remove('hidden');
-    }
-    function closePops() {
-      ['userPop', 'viewPop', 'cardMenuPop'].forEach(id => document.getElementById(id).classList.add('hidden'));
-    }
-    function openModal(id) {
-      closeOverlays();
-      document.getElementById('backdrop').classList.remove('hidden');
-      document.getElementById(id).classList.remove('hidden');
-      if (id === 'cmdModal') document.getElementById('cmdIn').focus();
-    }
-    function openDrawer(id) {
-      closeOverlays();
-      document.getElementById('backdrop').classList.remove('hidden');
-      document.getElementById(id).classList.remove('hidden');
-    }
-    function closeOverlays() {
-      ['backdrop', 'alertsDrawer', 'addSystemModal', 'cmdModal'].forEach(id => document.getElementById(id).classList.add('hidden'));
-      closePops();
-    }
-    function filterSystem(q) {
-      document.getElementById('piCard').style.display = document.getElementById('piCard').textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
-    }
-    function filterCmd(q) {
-      document.querySelectorAll('#cmdList .dd-item').forEach(el => {
-        el.style.display = el.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
-      });
-    }
+    function setLayout(mode) { document.getElementById('sysCardsView').classList.toggle('hidden', mode !== 'grid'); document.getElementById('sysTableView').classList.toggle('hidden', mode !== 'table'); closePops(); }
+    function switchSetTab(t, btn) { document.querySelectorAll('.side-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); ['general', 'notify', 'tokens', 'history', 'heartbeat', 'yaml'].forEach(id => document.getElementById('set-' + id).classList.toggle('hidden', id !== t)); }
+    function toggleTheme() { document.documentElement.classList.toggle('dark'); showToast(document.documentElement.classList.contains('dark') ? 'Dark Mode' : 'Light Mode'); }
+    function togglePop(id, e) { e.stopPropagation(); const t = document.getElementById(id); const h = t.classList.contains('hidden'); closePops(); if (h) t.classList.remove('hidden'); }
+    function closePops() { ['userPop', 'viewPop', 'cardMenuPop'].forEach(id => document.getElementById(id).classList.add('hidden')); }
+    function openModal(id) { closeOverlays(); document.getElementById('backdrop').classList.remove('hidden'); document.getElementById(id).classList.remove('hidden'); if (id === 'cmdModal') document.getElementById('cmdIn').focus(); }
+    function openDrawer(id) { closeOverlays(); document.getElementById('backdrop').classList.remove('hidden'); document.getElementById(id).classList.remove('hidden'); }
+    function closeOverlays() { ['backdrop', 'alertsDrawer', 'addSystemModal', 'cmdModal'].forEach(id => document.getElementById(id).classList.add('hidden')); closePops(); }
+    function setAgentTab(btn) { document.querySelectorAll('.seg-tab').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
+    function filterSystem(q) { document.getElementById('piCard').style.display = document.getElementById('piCard').textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none'; }
+    function filterTbl(id, q) { document.querySelectorAll('#' + id + ' tbody tr').forEach(r => r.style.display = r.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none'); }
+    function filterCmd(q) { document.querySelectorAll('#cmdList .dd-item').forEach(el => el.style.display = el.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none'); }
     let tmr;
-    function showToast(m) {
-      const t = document.getElementById('toast');
-      t.textContent = m; t.classList.remove('hidden');
-      clearTimeout(tmr); tmr = setTimeout(() => t.classList.add('hidden'), 2400);
-    }
+    function showToast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.remove('hidden'); clearTimeout(tmr); tmr = setTimeout(() => t.classList.add('hidden'), 2400); }
     document.addEventListener('click', closePops);
-    document.addEventListener('keydown', e => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openModal('cmdModal'); }
-      if (e.key === 'Escape') closeOverlays();
-    });
+    document.addEventListener('keydown', e => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openModal('cmdModal'); } if (e.key === 'Escape') closeOverlays(); });
   </script>
 </body>
 </html>
