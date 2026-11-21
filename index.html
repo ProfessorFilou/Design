@@ -3,20 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Alle Systeme / Beszel</title>
+  <title>Beszel UI – Interaktives Template</title>
   <style>
     :root {
       --bg: #fafafa;
       --surface: #ffffff;
+      --muted-bg: #f4f4f5;
       --border: #e4e4e7;
       --border-soft: #f4f4f5;
       --text: #09090b;
       --muted: #71717a;
+      --primary: #18181b;
+      --primary-fg: #ffffff;
       --green: #10b981;
       --amber: #eab308;
       --red: #ef4444;
-      --btn-dark: #18181b;
-      --hover: #f4f4f5;
+      --ring: rgba(24, 24, 27, 0.12);
+    }
+
+    html.dark {
+      --bg: #09090b;
+      --surface: #121215;
+      --muted-bg: #27272a;
+      --border: #27272a;
+      --border-soft: #1f1f23;
+      --text: #fafafa;
+      --muted: #a1a1aa;
+      --primary: #fafafa;
+      --primary-fg: #09090b;
+      --ring: rgba(250, 250, 250, 0.15);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -27,16 +42,31 @@
       color: var(--text);
       font-size: 14px;
       line-height: 1.45;
+      transition: background-color 0.18s ease, color 0.18s ease;
       -webkit-font-smoothing: antialiased;
     }
 
-    .wrap {
-      max-width: 1440px;
-      margin: 0 auto;
-      padding: 16px 24px 40px;
+    /* Keyframe-Animationen wie bei Radix UI / shadcn */
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* Exakte Top-Navbar aus deinen Screenshots */
+    @keyframes modalPop {
+      from { opacity: 0; transform: translate(-50%, -48%) scale(0.96); }
+      to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(14px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .animate-in { animation: fadeSlideIn 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+
+    .wrap { max-width: 1440px; margin: 0 auto; padding: 16px 24px 48px; }
+
+    /* Topbar */
     .topbar {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -48,322 +78,210 @@
       justify-content: space-between;
       gap: 12px;
       margin-bottom: 18px;
+      transition: background-color 0.18s ease, border-color 0.18s ease;
     }
 
-    .topbar-left {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
+    .topbar-left { display: flex; align-items: center; gap: 16px; }
+    .logo { font-size: 19px; font-weight: 800; letter-spacing: -0.03em; cursor: pointer; user-select: none; }
 
-    .logo {
-      font-size: 19px;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      color: var(--text);
-      cursor: pointer;
+    .search-trigger {
+      display: flex; align-items: center; justify-content: space-between;
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 5px 10px; width: 155px; color: var(--muted);
+      font-size: 13px; background: var(--surface); cursor: pointer;
+      transition: border-color 0.15s, background-color 0.15s;
     }
-
-    .search-box {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 5px 10px;
-      width: 145px;
-      color: var(--muted);
-      font-size: 13px;
-      background: #fff;
-    }
+    .search-trigger:hover { background: var(--muted-bg); color: var(--text); }
 
     .kbd {
-      font-size: 11px;
-      background: #f4f4f5;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 1px 5px;
-      color: var(--muted);
+      font-size: 11px; background: var(--muted-bg);
+      border: 1px solid var(--border); border-radius: 4px;
+      padding: 1px 5px; color: var(--muted);
     }
 
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .topbar-right { display: flex; align-items: center; gap: 6px; }
 
-    .nav-icon-btn {
-      width: 34px;
-      height: 34px;
-      border: none;
-      background: transparent;
-      border-radius: 8px;
-      display: grid;
-      place-items: center;
-      color: #3f3f46;
+    /* Buttons mit echtem shadcn Hover + Active Scale */
+    .icon-btn, .btn-outline, .btn-primary, .side-item {
+      transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
       cursor: pointer;
     }
+    .icon-btn:active, .btn-outline:active, .btn-primary:active { transform: scale(0.96); }
 
-    .nav-icon-btn:hover, .nav-icon-btn.active {
-      background: var(--hover);
-      color: var(--text);
+    .icon-btn {
+      width: 34px; height: 34px; border: none; background: transparent;
+      border-radius: 8px; display: grid; place-items: center; color: var(--muted);
     }
+    .icon-btn:hover, .icon-btn.active { background: var(--muted-bg); color: var(--text); }
 
     .btn-outline {
-      height: 34px;
-      padding: 0 12px;
-      border: 1px solid var(--border);
-      background: #fff;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-left: 4px;
+      height: 34px; padding: 0 12px; border: 1px solid var(--border);
+      background: var(--surface); border-radius: 8px; font-size: 13px;
+      font-weight: 500; color: var(--text); display: inline-flex; align-items: center; gap: 6px;
     }
+    .btn-outline:hover { background: var(--muted-bg); }
 
-    .btn-outline:hover { background: var(--hover); }
-
-    .btn-dark {
-      height: 36px;
-      padding: 0 14px;
-      border: none;
-      background: var(--btn-dark);
-      color: #fff;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
+    .btn-primary {
+      height: 36px; padding: 0 14px; border: none;
+      background: var(--primary); color: var(--primary-fg);
+      border-radius: 8px; font-size: 13px; font-weight: 500;
+      display: inline-flex; align-items: center; gap: 7px;
     }
+    .btn-primary:hover { opacity: 0.88; }
 
-    .btn-dark:hover { opacity: 0.9; }
-
-    /* Haupt-Panel (wie im Screenshot mit großem Rahmen) */
+    /* Haupt-Panel & Karten */
     .panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 24px;
     }
-
     .panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 16px; flex-wrap: wrap; margin-bottom: 20px;
     }
-
     .panel-title { font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
     .panel-sub { font-size: 13.5px; color: var(--muted); margin-top: 3px; }
 
-    .filter-row { display: flex; align-items: center; gap: 8px; }
-    .filter-input {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 7px 12px;
-      font-size: 13.5px;
-      width: 240px;
-      outline: none;
-    }
-
-    /* Schmale Systemkarte aus deinem Screenshot */
-    .systems-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 310px));
-      gap: 16px;
-    }
-
-    .sys-card {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: #fff;
-      padding: 16px;
-      cursor: pointer;
+    .input-field {
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 7px 12px; font-size: 13.5px; width: 240px;
+      background: var(--surface); color: var(--text); outline: none;
       transition: border-color 0.15s, box-shadow 0.15s;
     }
+    .input-field:focus { border-color: var(--muted); box-shadow: 0 0 0 3px var(--ring); }
 
-    .sys-card:hover {
-      border-color: #a1a1aa;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    /* Systemkarte */
+    .systems-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 315px)); gap: 16px; }
+    .sys-card {
+      position: relative; border: 1px solid var(--border); border-radius: 12px;
+      background: var(--surface); padding: 16px; cursor: pointer;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.15s ease;
     }
+    .sys-card:hover { border-color: var(--muted); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05); transform: translateY(-1px); }
 
     .sys-card-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border-soft);
-      margin-bottom: 12px;
-      font-weight: 600;
-      font-size: 14.5px;
+      display: flex; justify-content: space-between; align-items: center;
+      padding-bottom: 12px; border-bottom: 1px solid var(--border-soft);
+      margin-bottom: 12px; font-weight: 600; font-size: 14.5px;
     }
-
     .sys-name { display: flex; align-items: center; gap: 8px; }
-    .sys-actions { display: flex; align-items: center; gap: 10px; color: #3f3f46; }
+    .sys-actions { display: flex; align-items: center; gap: 4px; }
 
     .metric-list { display: flex; flex-direction: column; gap: 9px; font-size: 13px; }
-    .metric-row {
-      display: grid;
-      grid-template-columns: 118px 64px 1fr;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .m-label { display: flex; align-items: center; gap: 8px; color: #52525b; }
-    .m-val { font-variant-numeric: tabular-nums; color: var(--text); white-space: nowrap; }
-
-    .bar-bg {
-      height: 10px;
-      background: #f4f4f5;
-      border-radius: 4px;
-      overflow: hidden;
-    }
-    .bar-fill { height: 100%; border-radius: 4px; }
+    .metric-row { display: grid; grid-template-columns: 118px 64px 1fr; align-items: center; gap: 6px; }
+    .m-label { display: flex; align-items: center; gap: 8px; color: var(--muted); }
+    .m-val { font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .bar-bg { height: 10px; background: var(--muted-bg); border-radius: 4px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 4px; transition: width 0.35s ease; }
 
     .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
     .dot-green { background: var(--green); }
     .dot-amber { background: var(--amber); }
     .dot-gray  { background: #71717a; }
 
-    /* Einstellungen-Layout (exakt wie Screenshots 1–3) */
+    /* Einstellungen */
     .settings-layout {
-      display: grid;
-      grid-template-columns: 220px 1fr;
-      gap: 32px;
-      border-top: 1px solid var(--border-soft);
-      padding-top: 22px;
+      display: grid; grid-template-columns: 220px 1fr; gap: 32px;
+      border-top: 1px solid var(--border-soft); padding-top: 22px;
     }
-
-    @media (max-width: 780px) {
-      .settings-layout { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 780px) { .settings-layout { grid-template-columns: 1fr; } }
 
     .side-nav { display: flex; flex-direction: column; gap: 4px; }
     .side-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 13.5px;
-      font-weight: 500;
-      color: #3f3f46;
-      cursor: pointer;
-      border: none;
-      background: transparent;
-      text-align: left;
+      display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+      border-radius: 8px; font-size: 13.5px; font-weight: 500; color: var(--muted);
+      border: none; background: transparent; text-align: left;
     }
-    .side-item:hover { background: var(--hover); }
-    .side-item.active { background: #f4f4f5; color: var(--text); font-weight: 600; }
+    .side-item:hover { background: var(--muted-bg); color: var(--text); }
+    .side-item.active { background: var(--muted-bg); color: var(--text); font-weight: 600; }
 
-    .settings-section h3 { font-size: 16px; font-weight: 600; }
-    .settings-section p.desc { font-size: 13px; color: var(--muted); margin-top: 2px; margin-bottom: 18px; }
     .divider { height: 1px; background: var(--border-soft); margin: 18px 0; }
 
-    .tag-box {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 6px 10px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      align-items: center;
-      margin-top: 6px;
-    }
-    .email-tag {
-      background: #18181b;
-      color: #fff;
-      font-size: 12px;
-      padding: 3px 8px;
-      border-radius: 6px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .warn-box {
-      border: 1px solid #fecaca;
-      background: #fff;
-      border-radius: 10px;
-      padding: 14px 16px;
-      color: #dc2626;
-      font-size: 13px;
-      margin: 18px 0;
-    }
-    .warn-box strong { display: block; margin-bottom: 3px; }
-
-    /* Systemd-Tabelle */
+    /* Tabelle & Badges */
     .table-wrap { overflow-x: auto; margin-top: 14px; }
     table { width: 100%; border-collapse: collapse; font-size: 13.5px; text-align: left; }
     th { padding: 10px 12px; color: var(--muted); font-weight: 500; border-bottom: 1px solid var(--border); white-space: nowrap; }
     td { padding: 11px 12px; border-bottom: 1px solid var(--border-soft); white-space: nowrap; font-variant-numeric: tabular-nums; }
+    tbody tr:hover td { background: var(--muted-bg); }
     .pill {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 2px 10px; border-radius: 999px; border: 1px solid var(--border);
-      font-size: 12px; font-weight: 500; background: #fff;
+      display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px;
+      border-radius: 999px; border: 1px solid var(--border); font-size: 12px; font-weight: 500;
+    }
+
+    /* Command-Palette Modal & Toast */
+    .overlay {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(2px); z-index: 50;
+    }
+    .modal {
+      position: fixed; top: 32%; left: 50%; transform: translate(-50%, -50%);
+      width: min(460px, 92vw); background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); z-index: 60;
+      animation: modalPop 0.16s cubic-bezier(0.16, 1, 0.3, 1); overflow: hidden;
+    }
+    .modal input {
+      width: 100%; padding: 14px 16px; border: none; border-bottom: 1px solid var(--border);
+      background: transparent; color: var(--text); font-size: 14px; outline: none;
+    }
+    .cmd-item {
+      padding: 10px 16px; display: flex; justify-content: space-between;
+      cursor: pointer; font-size: 13.5px;
+    }
+    .cmd-item:hover { background: var(--muted-bg); }
+
+    .toast {
+      position: fixed; bottom: 20px; right: 20px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12); font-size: 13.5px; font-weight: 500;
+      z-index: 70; animation: toastIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <!-- Exakte Beszel Top-Leiste -->
+    <!-- Top-Leiste -->
     <header class="topbar">
       <div class="topbar-left">
         <div class="logo" onclick="switchView('systems')">Beszel</div>
-        <div class="search-box">
+        <button class="search-trigger" onclick="openCmd()">
           <span>&#128269; Suche</span>
           <span class="kbd">&#8984; K</span>
-        </div>
+        </button>
       </div>
       <div class="topbar-right">
-        <button class="nav-icon-btn active" id="nav-systems" title="Alle Systeme" onclick="switchView('systems')">&#9634;</button>
-        <button class="nav-icon-btn" title="Container">&#9783;</button>
-        <button class="nav-icon-btn" title="S.M.A.R.T.">&#9737;</button>
-        <button class="nav-icon-btn" title="Hell / Dunkel">&#9788;</button>
-        <button class="nav-icon-btn" id="nav-settings" title="Einstellungen" onclick="switchView('settings')">&#9881;</button>
-        <button class="nav-icon-btn" title="Benutzer">&#9787;</button>
-        <button class="btn-outline">+ System hinzufügen</button>
+        <button class="icon-btn active" id="nav-systems" title="Alle Systeme" onclick="switchView('systems')">&#9634;</button>
+        <button class="icon-btn" title="Dark / Light Mode" onclick="toggleTheme()">&#9788;</button>
+        <button class="icon-btn" id="nav-settings" title="Einstellungen" onclick="switchView('settings')">&#9881;</button>
+        <button class="btn-outline" onclick="showToast('Dialog: Neues System hinzufügen')">+ System hinzufügen</button>
       </div>
     </header>
 
-    <!-- ANSICHT 1: Alle Systeme (exakt wie dein 4. Screenshot) -->
-    <section class="panel" id="view-systems">
+    <!-- ANSICHT 1: Alle Systeme -->
+    <section class="panel animate-in" id="view-systems">
       <div class="panel-header">
         <div>
           <h1 class="panel-title">Alle Systeme</h1>
           <p class="panel-sub">Klicke auf ein System, um weitere Informationen zu sehen.</p>
         </div>
-        <div class="filter-row">
-          <input type="text" class="filter-input" placeholder="Filter..." onkeyup="filterSystemCard(this.value)" />
-          <button class="btn-outline" style="margin:0;">&#9776;</button>
-        </div>
+        <input type="text" class="input-field" placeholder="Filter..." onkeyup="filterSystemCard(this.value)" />
       </div>
 
       <div class="systems-grid">
         <div class="sys-card" id="piCard" onclick="toggleDetail()">
           <div class="sys-card-head">
             <div class="sys-name"><span class="dot dot-green"></span> Rasbarry Pi</div>
-            <div class="sys-actions"><span>&#128276;</span><span>&bull;&bull;&bull;</span></div>
+            <div class="sys-actions" onclick="event.stopPropagation()">
+              <button class="icon-btn" style="width:28px;height:28px;" onclick="showToast('Warnungen für Rasbarry Pi konfiguriert')">&#128276;</button>
+              <button class="icon-btn" style="width:28px;height:28px;" onclick="toggleDetail()">&bull;&bull;&bull;</button>
+            </div>
           </div>
           <div class="metric-list">
-            <div class="metric-row"><span class="m-label">&#9635; CPU:</span><span class="m-val">0,87%</span><div class="bar-bg"><div class="bar-fill" style="width:4%; background:#10b981;"></div></div></div>
+            <div class="metric-row"><span class="m-label">&#9635; CPU:</span><span class="m-val">0,87%</span><div class="bar-bg"><div class="bar-fill" style="width:5%; background:#10b981;"></div></div></div>
             <div class="metric-row"><span class="m-label">&#9707; Arbeitsspeicher:</span><span class="m-val">29,2%</span><div class="bar-bg"><div class="bar-fill" style="width:29.2%; background:#10b981;"></div></div></div>
             <div class="metric-row"><span class="m-label">&#9921; Festplatte:</span><span class="m-val">67,9%</span><div class="bar-bg"><div class="bar-fill" style="width:67.9%; background:#eab308;"></div></div></div>
-            <div class="metric-row"><span class="m-label">&#9634; GPU:</span><span class="m-val" style="color:var(--muted);">—</span><div></div></div>
             <div class="metric-row"><span class="m-label">&#8987; Systemlast:</span><span class="m-val" style="grid-column: span 2;"><span class="dot dot-green"></span> 0,01 0,04 0,05</span></div>
             <div class="metric-row"><span class="m-label">&#8644; Netzwerk:</span><span class="m-val" style="grid-column: span 2;">1,03 KB/s</span></div>
             <div class="metric-row"><span class="m-label">&#127777; Temperatur:</span><span class="m-val" style="grid-column: span 2;">50,63 &deg;C</span></div>
-            <div class="metric-row"><span class="m-label">&#128267; Batt:</span><span class="m-val" style="color:var(--muted);">—</span><div></div></div>
-            <div class="metric-row"><span class="m-label">&#9737; Wi-Fi:</span><span class="m-val" style="color:var(--muted);">—</span><div></div></div>
             <div class="metric-row"><span class="m-label">&#9745; Dienste:</span><span class="m-val" style="grid-column: span 2;"><span class="dot dot-green"></span> 79 Dienste</span></div>
             <div class="metric-row"><span class="m-label">&#8635; Updates:</span><span class="m-val" style="grid-column: span 2;"><span class="dot dot-amber"></span> 18 Updates</span></div>
             <div class="metric-row"><span class="m-label">&#9201; Betriebszeit:</span><span class="m-val" style="grid-column: span 2;">1 Stunde</span></div>
@@ -372,14 +290,14 @@
         </div>
       </div>
 
-      <!-- Aufklappbare Systemd-Dienste darunter -->
-      <div id="detailPanel" class="hidden" style="margin-top:24px; border-top:1px solid var(--border); padding-top:20px;">
+      <!-- Aufklappbare Systemd-Dienste -->
+      <div id="detailPanel" class="hidden animate-in" style="margin-top:24px; border-top:1px solid var(--border); padding-top:20px;">
         <div class="panel-header" style="margin-bottom:10px;">
           <div>
             <h2 style="font-size:17px; font-weight:600;">Systemd-Dienste</h2>
             <p class="panel-sub">Gesamt: 79 &nbsp;|&nbsp; Fehlgeschlagen: 0 &nbsp;|&nbsp; Alle 10 Minuten aktualisiert.</p>
           </div>
-          <input type="text" class="filter-input" placeholder="Filter..." onkeyup="filterServices(this.value)" />
+          <input type="text" class="input-field" placeholder="Filter..." onkeyup="filterServices(this.value)" />
         </div>
         <div class="table-wrap">
           <table id="svcTable">
@@ -387,9 +305,7 @@
               <tr><th>Name &#8645;</th><th>Status &#8645;</th><th>Unterzustand &#8645;</th><th>CPU (10m) &#8645;</th><th>CPU-Spitze &#8645;</th><th>Arbeitsspeicher &#8645;</th></tr>
             </thead>
             <tbody>
-              <tr><td>avahi-daemon</td><td><span class="pill"><span class="dot dot-green"></span> Active</span></td><td><span class="pill"><span class="dot dot-green"></span> Running</span></td><td>0,02%</td><td>0,04%</td><td style="color:var(--muted);">N/A</td></tr>
               <tr><td>beszel-agent</td><td><span class="pill"><span class="dot dot-green"></span> Active</span></td><td><span class="pill"><span class="dot dot-green"></span> Running</span></td><td>0,02%</td><td>0,27%</td><td style="color:var(--muted);">N/A</td></tr>
-              <tr><td>beszel-hub</td><td><span class="pill"><span class="dot dot-green"></span> Active</span></td><td><span class="pill"><span class="dot dot-green"></span> Running</span></td><td>0,01%</td><td>0,02%</td><td style="color:var(--muted);">N/A</td></tr>
               <tr><td>fan_control</td><td><span class="pill"><span class="dot dot-green"></span> Active</span></td><td><span class="pill"><span class="dot dot-green"></span> Running</span></td><td>0,67%</td><td>1,42%</td><td style="color:var(--muted);">N/A</td></tr>
               <tr><td>cockpit</td><td><span class="pill"><span class="dot dot-gray"></span> Inactive</span></td><td><span class="pill"><span class="dot dot-amber"></span> Dead</span></td><td style="color:var(--muted);">N/A</td><td style="color:var(--muted);">N/A</td><td style="color:var(--muted);">N/A</td></tr>
             </tbody>
@@ -397,8 +313,8 @@
         </div>
       </div>
     </section>
-    <!-- ANSICHT 2: Einstellungen (exakt wie deine Screenshots 1–3) -->
-    <section class="panel hidden" id="view-settings">
+    <!-- ANSICHT 2: Einstellungen -->
+    <section class="panel hidden animate-in" id="view-settings">
       <div class="panel-header">
         <div>
           <h1 class="panel-title">Einstellungen</h1>
@@ -414,54 +330,45 @@
         </aside>
 
         <div>
-          <!-- Tab Allgemein -->
-          <div class="settings-section" id="tab-general">
+          <div class="animate-in" id="tab-general">
             <h3>Allgemein</h3>
-            <p class="desc">Allgemeine Anwendungsoptionen ändern.</p>
-            <div class="divider"></div>
-            <strong>Sprache</strong>
-            <p class="desc">Bevorzugte Sprache auswählen</p>
-            <select style="width:100%; max-width:480px; padding:8px 12px; border:1px solid var(--border); border-radius:8px; background:#fff;">
-              <option>&#127465;&#127466; Deutsch</option>
-              <option>&#127468;&#127463; English</option>
-            </select>
+            <p class="panel-sub">Allgemeine Anwendungsoptionen ändern.</p>
             <div class="divider"></div>
             <strong>Layoutbreite</strong>
-            <p class="desc">Breite des Hauptlayouts anpassen (1600px)</p>
-            <input type="range" min="1000" max="1800" value="1600" style="width:100%; max-width:480px; accent-color:#18181b;" />
+            <p class="panel-sub" id="widthLabel">Breite des Hauptlayouts anpassen (1440px)</p>
+            <input type="range" min="1000" max="1800" value="1440" oninput="setWidth(this.value)" style="width:100%; max-width:440px; accent-color:var(--primary);" />
           </div>
 
-          <!-- Tab Benachrichtigungen -->
-          <div class="settings-section hidden" id="tab-notify">
+          <div class="hidden animate-in" id="tab-notify">
             <h3>E-Mail-Benachrichtigungen</h3>
-            <p class="desc">Bitte konfiguriere einen SMTP-Server, um sicherzustellen, dass Warnungen zugestellt werden.</p>
-            <strong style="font-size:13px;">An E-Mail(s)</strong>
-            <div class="tag-box">
-              <span class="email-tag">admin@lokal.de &times;</span>
-              <input type="text" placeholder="E-Mail-Adresse eingeben..." style="border:none; outline:none; font-size:13px; flex:1;" />
-            </div>
+            <p class="panel-sub">Warnungen und Ruhezeiten verwalten.</p>
             <div class="divider"></div>
-            <h3>Ruhezeiten</h3>
-            <p class="desc">Plane Ruhezeiten, in denen keine Benachrichtigungen gesendet werden (z. B. 21:50 – 10:00).</p>
-            <button class="btn-dark">&#128190; Einstellungen speichern</button>
+            <button class="btn-primary" onclick="showToast('Einstellungen erfolgreich gespeichert')">&#128190; Einstellungen speichern</button>
           </div>
 
-          <!-- Tab YAML-Konfiguration -->
-          <div class="settings-section hidden" id="tab-yaml">
+          <div class="hidden animate-in" id="tab-yaml">
             <h3>YAML-Konfiguration</h3>
-            <p class="desc">Exportiere die aktuelle Systemkonfiguration.</p>
+            <p class="panel-sub">Exportiere die aktuelle Systemkonfiguration.</p>
             <div class="divider"></div>
-            <p style="font-size:13.5px;">Systeme können in einer <code style="background:#f4f4f5; padding:2px 5px; border-radius:4px;">config.yml</code>-Datei im Datenverzeichnis verwaltet werden.</p>
-            <div class="warn-box">
-              <strong>&#9888; Vorsicht – potenzieller Datenverlust</strong>
-              Bestehende Systeme, die nicht in der config.yml definiert sind, werden gelöscht. Bitte mache regelmäßige Backups.
-            </div>
-            <button class="btn-dark">&#128190; Konfiguration exportieren</button>
+            <button class="btn-primary" onclick="showToast('config.yml exportiert')">&#128190; Konfiguration exportieren</button>
           </div>
         </div>
       </div>
     </section>
   </div>
+
+  <!-- Command-Palette (⌘K) -->
+  <div id="cmdOverlay" class="overlay hidden" onclick="closeCmd()"></div>
+  <div id="cmdModal" class="modal hidden">
+    <input type="text" id="cmdInput" placeholder="Befehl oder Ansicht suchen..." onkeyup="filterCmd(this.value)" />
+    <div id="cmdList">
+      <div class="cmd-item" onclick="switchView('systems'); closeCmd();"><span>&#9634; Alle Systeme öffnen</span><span class="kbd">G S</span></div>
+      <div class="cmd-item" onclick="switchView('settings'); closeCmd();"><span>&#9881; Einstellungen öffnen</span><span class="kbd">G E</span></div>
+      <div class="cmd-item" onclick="toggleTheme(); closeCmd();"><span>&#9788; Dark / Light Mode umschalten</span><span class="kbd">T</span></div>
+    </div>
+  </div>
+
+  <div id="toastBox" class="toast hidden"></div>
 
   <script>
     function switchView(view) {
@@ -474,14 +381,20 @@
     function switchTab(tab, btn) {
       document.querySelectorAll('.side-item').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      ['general', 'notify', 'yaml'].forEach(id => {
-        document.getElementById('tab-' + id).classList.toggle('hidden', id !== tab);
-      });
+      ['general', 'notify', 'yaml'].forEach(id => document.getElementById('tab-' + id).classList.toggle('hidden', id !== tab));
     }
 
-    function toggleDetail() {
-      document.getElementById('detailPanel').classList.toggle('hidden');
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark');
+      showToast(document.documentElement.classList.contains('dark') ? 'Dark Mode aktiviert' : 'Light Mode aktiviert');
     }
+
+    function setWidth(px) {
+      document.querySelector('.wrap').style.maxWidth = px + 'px';
+      document.getElementById('widthLabel').textContent = 'Breite des Hauptlayouts anpassen (' + px + 'px)';
+    }
+
+    function toggleDetail() { document.getElementById('detailPanel').classList.toggle('hidden'); }
 
     function filterSystemCard(q) {
       const card = document.getElementById('piCard');
@@ -493,6 +406,35 @@
         tr.style.display = tr.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
       });
     }
+
+    function openCmd() {
+      document.getElementById('cmdOverlay').classList.remove('hidden');
+      document.getElementById('cmdModal').classList.remove('hidden');
+      document.getElementById('cmdInput').focus();
+    }
+    function closeCmd() {
+      document.getElementById('cmdOverlay').classList.add('hidden');
+      document.getElementById('cmdModal').classList.add('hidden');
+    }
+    function filterCmd(q) {
+      document.querySelectorAll('#cmdList .cmd-item').forEach(el => {
+        el.style.display = el.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
+      });
+    }
+
+    let toastTimer;
+    function showToast(msg) {
+      const box = document.getElementById('toastBox');
+      box.textContent = msg;
+      box.classList.remove('hidden');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => box.classList.add('hidden'), 2800);
+    }
+
+    document.addEventListener('keydown', e => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openCmd(); }
+      if (e.key === 'Escape') closeCmd();
+    });
   </script>
 </body>
 </html>
