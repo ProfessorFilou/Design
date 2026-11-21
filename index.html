@@ -6,34 +6,65 @@
   <title>Alle Systeme / Beszel</title>
   <style>
     :root {
-      --bg: #fafafa; --surface: #ffffff; --muted-bg: #f4f4f5;
-      --border: #e4e4e7; --border-soft: #f4f4f5; --text: #09090b;
-      --muted: #71717a; --primary: #18181b; --primary-fg: #ffffff;
-      --green: #10b981; --amber: #eab308; --red: #ef4444; --blue: #3b82f6;
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --muted-bg: #f4f4f5;
+      --border: #e4e4e7;
+      --border-soft: #f4f4f5;
+      --text: #09090b;
+      --muted: #71717a;
+      --primary: #18181b;
+      --primary-fg: #ffffff;
+      --green: #10b981;
+      --amber: #eab308;
+      --red: #ef4444;
+      --blue: #3b82f6;
       --ring: rgba(24, 24, 27, 0.12);
     }
+
     html.dark {
-      --bg: #09090b; --surface: #121215; --muted-bg: #27272a;
-      --border: #27272a; --border-soft: #1f1f23; --text: #fafafa;
-      --muted: #a1a1aa; --primary: #fafafa; --primary-fg: #09090b;
+      --bg: #09090b;
+      --surface: #121215;
+      --muted-bg: #27272a;
+      --border: #27272a;
+      --border-soft: #1f1f23;
+      --text: #fafafa;
+      --muted: #a1a1aa;
+      --primary: #fafafa;
+      --primary-fg: #09090b;
       --ring: rgba(250, 250, 250, 0.16);
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
-      background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.45;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.45;
       transition: background-color 0.16s ease, color 0.16s ease;
       -webkit-font-smoothing: antialiased;
     }
+
     svg.lucide {
-      width: 16px; height: 16px; stroke: currentColor; stroke-width: 1.75;
-      stroke-linecap: round; stroke-linejoin: round; fill: none; flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      stroke-width: 1.75;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      flex-shrink: 0;
     }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes popIn { from { opacity: 0; transform: translateY(-4px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
     @keyframes modalIn { from { opacity: 0; transform: translate(-50%, -48%) scale(0.96); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
     @keyframes slideRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
-    .anim-up { animation: fadeUp 0.16s cubic-bezier(0.16, 1, 0.3, 1); }
+
+    .anim-up { animation: slideUp 0.16s cubic-bezier(0.16, 1, 0.3, 1); }
     .wrap { max-width: 1600px; margin: 0 auto; padding: 14px 20px 48px; }
     .topbar {
       background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
@@ -73,7 +104,7 @@
       background: var(--surface); color: var(--text); font-size: 13.5px; outline: none;
     }
     .sys-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 315px)); gap: 16px; }
-    .sys-card { border: 1px solid var(--border); border-radius: 12px; background: var(--surface); padding: 16px; cursor: pointer; }
+    .sys-card { border: 1px solid var(--border); border-radius: 12px; background: var(--surface); padding: 16px; cursor: pointer; position: relative; }
     .sys-card:hover { border-color: #a1a1aa; }
     .sys-top { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid var(--border-soft); margin-bottom: 12px; font-weight: 600; }
     .m-row { display: grid; grid-template-columns: 124px 62px 1fr; align-items: center; gap: 6px; font-size: 13px; margin-bottom: 8px; }
@@ -150,7 +181,6 @@
           <span class="kbd">&#8984; K</span>
         </button>
       </div>
-
       <div class="nav-group">
         <button class="btn-icon active" id="nav-systems" title="Systeme" onclick="switchView('systems')">
           <svg class="lucide" viewBox="0 0 24 24"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
@@ -348,7 +378,9 @@
           </table>
         </div>
       </section>
-    </div>    <section class="panel hidden anim-up" id="view-containers">
+    </div>
+
+    <section class="panel hidden anim-up" id="view-containers">
       <h1 class="panel-title">Alle Container</h1><p class="panel-sub" style="margin-top:12px;">Keine Ergebnisse.</p>
     </section>
 
